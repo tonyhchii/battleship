@@ -42,11 +42,11 @@ it("Ship.hit(), hit cannot go over length", () => {
 it("Ship.hit(), causes ship to Sink", () => {
   const test = new Ship(4, 4);
   test.hit();
-  expect(test.sunk).toBe(true);
+  expect(test.isSunk()).toBe(true);
 });
 
 it("Ship.hit(), causes ship to Sink", () => {
   const test = new Ship(4, 3);
   test.hit();
-  expect(test.sunk).toBe(true);
+  expect(test.isSunk()).toBe(true);
 });

@@ -9,12 +9,11 @@ class Ship {
     if (this.hits < this.length) {
       this.hits += 1;
     }
-    this.isSunk();
   }
 
   isSunk() {
-    if (this.hits === this.length) {
-      this.sunk = true;
+    if (this.hits >= this.length) {
+      return true;
     }
   }
 }
