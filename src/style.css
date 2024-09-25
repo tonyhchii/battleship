@@ -1,0 +1,33 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.gameboard {
+  display: grid;
+  grid-template-columns: 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem;
+}
+
+.board-square {
+  background-color: skyblue;
+  width: 3rem;
+  height: 3rem;
+  border: 1px;
+  border-style: solid;
+}
+
+.board-boat {
+  background-color: gray;
+}
+
+.board-miss {
+  background-color: white;
+}
+
+.board-hit {
+  background-color: red;
+}

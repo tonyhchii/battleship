@@ -31,6 +31,7 @@ class Gameboard {
       this.board[point[0]][point[1]] = -1;
     } else {
       curr.hit();
+      this.board[point[0]][point[1]] = 1;
     }
   }
 
