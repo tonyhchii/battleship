@@ -1,5 +1,3 @@
-const Ship = require("./ship");
-
 class Gameboard {
   constructor(size) {
     this.size = size;
@@ -33,7 +31,11 @@ class Gameboard {
   }
 
   isValid(points) {
-    if (points.some((point) => !this.board[point[0]][point[1]])) {
+    if (
+      points.some((point) => {
+        return point[0] < 0 || point[0] > 9 || point[1] > 9 || point[1] < 0;
+      })
+    ) {
       return false;
     } else if (points.some((point) => this.board[point[0]][point[1]].isShip)) {
       return false;
@@ -56,6 +58,26 @@ class Gameboard {
       return true;
     } else {
       return this.ships.every((ship) => ship.isSunk());
+    }
+  }
+
+  addShipToGame(ship) {
+    const randomBool = Math.random() < 0.5;
+    const isHorizontal = randomBool;
+    const randomStartX = Math.floor(Math.random() * 10);
+    const randomStartY = Math.floor(Math.random() * 10);
+    const points = [];
+    for (let i = 0; i < ship.length; i++) {
+      if (isHorizontal) {
+        points.push([randomStartX, randomStartY + i]);
+      } else {
+        points.push([randomStartX + i, randomStartY]);
+      }
+    }
+    if (this.isValid(points)) {
+      this.placeShip(ship, points);
+    } else {
+      this.addShipToGame(ship);
     }
   }
 }

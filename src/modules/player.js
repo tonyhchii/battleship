@@ -5,19 +5,22 @@ export class Player {
   constructor(type) {
     this.type = type;
     this.gameboard = new Gameboard(10);
+    this.ships = [];
     this.init();
   }
 
   init() {
-    const ship = new Ship(2, 0);
-    this.gameboard.placeShip(ship, [
-      [1, 1],
-      [1, 0],
-    ]);
-    const ship2 = new Ship(2, 1);
-    this.gameboard.placeShip(ship, [
-      [5, 5],
-      [5, 6],
-    ]);
+    const battleship = new Ship(4, 0, "Battleship");
+    const cruiser = new Ship(3, 0, "Cruiser");
+    const carrier = new Ship(5, 0, "Carrier");
+    const submarine = new Ship(3, 0, "Submarine");
+    const destroyer = new Ship(2, 0, "Destroyer");
+    this.ships = [battleship, cruiser, carrier, submarine, destroyer];
+  }
+
+  addAllShips(ships) {
+    ships.forEach((ship) => {
+      this.gameboard.addShipToGame(ship);
+    });
   }
 }

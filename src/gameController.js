@@ -4,11 +4,12 @@ import { Player } from "./modules/player";
 export const loadGame = () => {
   const player1 = new Player("human");
   const player2 = new Player("comp");
+  player2.addAllShips(player2.ships);
   loadBoard(player1.gameboard.board, "one", false);
   loadBoard(player2.gameboard.board, "two", false);
 
-  gameboardController("two", player1).create();
-  gameboardController("one", player2).create();
+  gameboardController("one", player1).create();
+  gameboardController("two", player2).create();
 };
 
 const gameboardController = (boardNum, player) => {
