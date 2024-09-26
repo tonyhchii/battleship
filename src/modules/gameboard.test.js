@@ -8,8 +8,8 @@ it("Ship placed", () => {
     [0, 1],
     [0, 2],
   ]);
-  expect(gameboard.board[0][1]).toBe(ship);
-  expect(gameboard.board[0][2]).toBe(ship);
+  expect(gameboard.board[0][1].Ship).toBe(ship);
+  expect(gameboard.board[0][2].Ship).toBe(ship);
 });
 
 it("Ship cannot be out of bounds", () => {
@@ -19,7 +19,7 @@ it("Ship cannot be out of bounds", () => {
     [1, -1],
     [1, 0],
   ]);
-  expect(gameboard.board[1][0]).toBe(0);
+  expect(gameboard.board[1][0].isShip).toBe(false);
 });
 
 it("Ship cannot collide with other ships", () => {
@@ -30,17 +30,16 @@ it("Ship cannot collide with other ships", () => {
     [1, 0],
   ]);
 
-  const ship2 = new Ship(2, 0);
+  const ship2 = new Ship(3, 0);
   gameboard.placeShip(ship2, [
     [1, 1],
     [1, 2],
   ]);
-
-  expect(gameboard.board[1][0]).toBe(ship);
-  expect(gameboard.board[1][2]).toBe(0);
+  expect(gameboard.board[1][0].Ship).toEqual(ship);
+  expect(gameboard.board[1][2].Ship).toBe(null);
 });
 
-it("The correct ship should receieve attack", () => {
+it("The correct ship should receive attack", () => {
   const gameboard = new Gameboard(10);
   const ship = new Ship(2, 0);
   gameboard.placeShip(ship, [
@@ -72,7 +71,7 @@ it("The correct ship should receieve attack 2", () => {
 it("Misses should be -1", () => {
   const gameboard = new Gameboard(10);
   gameboard.receiveAttack([1, 1]);
-  expect(gameboard.board[1][1]).toBe(-1);
+  expect(gameboard.board[1][1].isShot).toBe(true);
 });
 
 it("All ships are sunk", () => {
