@@ -1,19 +1,23 @@
-const gameboardContainer = document.querySelector(".gameboard");
-
-export const loadBoard = (board) => {
+export const loadBoard = (board, num, hidden) => {
+  const gameboardContainer = document.querySelector(`.gameboard-${num}`);
+  gameboardContainer.innerHTML = "";
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
       const square = document.createElement("div");
       square.classList.add("board-square");
+      square.dataset.x = i;
+      square.dataset.y = j;
       gameboardContainer.appendChild(square);
-      if (board[i][j] == 0) {
-        square.classList.add("board-water");
-      } else if (board[i][j] == -1) {
+      if (board[i][j] == -1) {
         square.classList.add("board-miss");
       } else if (board[i][j] == 1) {
         square.classList.add("board-hit");
+      } else if (board[i][j] == 0) {
       } else {
-        square.classList.add("board-boat");
+        if (hidden) {
+        } else {
+          square.classList.add("board-boat");
+        }
       }
     }
   }
