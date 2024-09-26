@@ -12,39 +12,6 @@ it("Ship placed", () => {
   expect(gameboard.board[0][2].Ship).toBe(ship);
 });
 
-it("Ship cannot be out of bounds", () => {
-  const gameboard = new Gameboard(10);
-  const ship = new Ship(2, 0);
-  gameboard.placeShip(ship, [
-    [1, -1],
-    [1, 0],
-  ]);
-  gameboard.placeShip(ship, [
-    [10, 0],
-    [11, 0],
-  ]);
-  expect(
-    gameboard.board.some((row) => row.some((element) => element.Ship === ship))
-  ).toBe(false);
-});
-
-it("Ship cannot collide with other ships", () => {
-  const gameboard = new Gameboard(10);
-  const ship = new Ship(2, 0);
-  gameboard.placeShip(ship, [
-    [1, 1],
-    [1, 0],
-  ]);
-
-  const ship2 = new Ship(3, 0);
-  gameboard.placeShip(ship2, [
-    [1, 1],
-    [1, 2],
-  ]);
-  expect(gameboard.board[1][0].Ship).toEqual(ship);
-  expect(gameboard.board[1][2].Ship).toBe(null);
-});
-
 it("The correct ship should receive attack", () => {
   const gameboard = new Gameboard(10);
   const ship = new Ship(2, 0);

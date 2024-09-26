@@ -22,12 +22,10 @@ class Gameboard {
 
   placeShip(ship, points) {
     this.ships.push(ship);
-    if (this.isValid(points)) {
-      points.forEach((point) => {
-        this.board[point[0]][point[1]].Ship = ship;
-        this.board[point[0]][point[1]].isShip = true;
-      });
-    }
+    points.forEach((point) => {
+      this.board[point[0]][point[1]].Ship = ship;
+      this.board[point[0]][point[1]].isShip = true;
+    });
   }
 
   isValid(points) {
@@ -61,23 +59,30 @@ class Gameboard {
     }
   }
 
-  addShipToGame(ship) {
+  generateShipPoints(ship, startPoint) {
     const randomBool = Math.random() < 0.5;
     const isHorizontal = randomBool;
     const randomStartX = Math.floor(Math.random() * 10);
     const randomStartY = Math.floor(Math.random() * 10);
+    const startX = startPoint ? parseInt(startPoint[0]) : randomStartX;
+    const startY = startPoint ? parseInt(startPoint[1]) : randomStartY;
     const points = [];
     for (let i = 0; i < ship.length; i++) {
       if (isHorizontal) {
-        points.push([randomStartX, randomStartY + i]);
+        points.push([startX, startY + i]);
       } else {
-        points.push([randomStartX + i, randomStartY]);
+        points.push([startX + i, startY]);
       }
     }
+    return points;
+  }
+
+  addShipToGame(ship, player, startPoint) {
+    const points = this.generateShipPoints(ship, startPoint);
     if (this.isValid(points)) {
       this.placeShip(ship, points);
-    } else {
-      this.addShipToGame(ship);
+    } else if (player == "comp") {
+      this.addShipToGame(ship, "comp");
     }
   }
 }

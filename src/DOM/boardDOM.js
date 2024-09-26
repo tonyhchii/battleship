@@ -18,7 +18,7 @@ export const loadBoard = (board, num, hidden) => {
         if (board[i][j].isShip === true) {
           if (hidden) {
           } else {
-            square.classList.add("board-boat");
+            square.classList.add(board[i][j].Ship.name);
           }
         }
       }

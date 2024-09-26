@@ -11,13 +11,23 @@
     </div>
     <div class="game-container">
       <div class="gameboard-container">
-        <h1>Player 1</h1>
+        <h1>Player 1<span class="hide">'s Turn</span></h1>
         <div class="gameboard-one"></div>
+        <div class="option-container">
+          <div id="0" class="Destroyer" draggable="true">a</div>
+          <div id="1" class="Carrier" draggable="true">a</div>
+          <div id="2" class="Cruiser" draggable="true">a</div>
+          <div id="3" class="Battleship" draggable="true">a</div>
+          <div id="4" class="Submarine" draggable="true">a</div>
+        </div>
       </div>
       <div class="gameboard-container">
-        <h1>Computer</h1>
+        <h1>Computer<span class="hide">'s Turn</span></h1>
         <div class="gameboard-two"></div>
       </div>
+    </div>
+    <div class="btn-container">
+      <button type="button" id="start" class="btn">Start Game</button>
     </div>
   </body>
 </html>

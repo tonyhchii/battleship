@@ -15,12 +15,12 @@ export class Player {
     const carrier = new Ship(5, 0, "Carrier");
     const submarine = new Ship(3, 0, "Submarine");
     const destroyer = new Ship(2, 0, "Destroyer");
-    this.ships = [battleship, cruiser, carrier, submarine, destroyer];
+    this.ships = [destroyer, carrier, cruiser, battleship, submarine];
   }
 
   addAllShips(ships) {
     ships.forEach((ship) => {
-      this.gameboard.addShipToGame(ship);
+      this.gameboard.addShipToGame(ship, "comp");
     });
   }
 }
