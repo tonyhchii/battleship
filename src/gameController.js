@@ -6,7 +6,7 @@ export const loadGame = () => {
   const player2 = new Player("comp");
   player2.addAllShips(player2.ships);
   loadBoard(player1.gameboard.board, "one", false);
-  loadBoard(player2.gameboard.board, "two", true);
+  loadBoard(player2.gameboard.board, "two", false);
   const dragControl = dragShipController(player1);
   dragControl.create();
 
@@ -14,13 +14,17 @@ export const loadGame = () => {
 };
 
 const startGameController = (player1, player2) => {
+  const optionContainer = document.querySelector(".option-container");
   const startGameBtn = document.getElementById("start");
   startGameBtn.addEventListener("click", () => {
-    const optionContainer = document.querySelector(".option-container");
-    optionContainer.classList.add("hide");
-    startGameBtn.classList.add("hide");
-    const player2Board = gameboardController("two", player2, player1);
-    player2Board.create();
+    if (optionContainer.children.length === 0) {
+      optionContainer.classList.add("hide");
+      startGameBtn.classList.add("hide");
+      const player2Board = gameboardController("two", player2, player1);
+      player2Board.create();
+    } else {
+      console.log("Need to drag all ships");
+    }
   });
 };
 
@@ -32,6 +36,10 @@ const computerAttack = (player) => {
     loadBoard(player.gameboard.board, "one", false);
   }
 
+  gameOverCheck(player);
+};
+
+const gameOverCheck = (player) => {
   if (player.gameboard.allSunk() === true) {
     console.log("All Sunk Player Lost GAME OVER");
   }
@@ -47,10 +55,7 @@ const gameboardController = (boardNum, myPlayer, enemyPlayer) => {
       loadBoard(myPlayer.gameboard.board, boardNum, false);
       computerAttack(enemyPlayer);
     }
-    if (myPlayer.gameboard.allSunk() === true) {
-      console.log("All Sunk Computer Lost GAME OVER");
-      destroy();
-    }
+    gameOverCheck(myPlayer);
   };
   const create = () => {
     gameBoard.addEventListener("click", controlGame);
@@ -75,10 +80,12 @@ const dragShipController = (player) => {
     const yVal = e.target.dataset.y;
     if (xVal && yVal) {
       const ships = player.gameboard.ships.length;
-      player.gameboard.addShipToGame(player.ships[draggedShip.id], "player", [
-        xVal,
-        yVal,
-      ]);
+      player.gameboard.addShipToGame(
+        player.ships[draggedShip.id],
+        true,
+        [xVal, yVal],
+        false
+      );
       loadBoard(player.gameboard.board, "one", false);
       if (ships < player.gameboard.ships.length) {
         draggedShip.remove();

@@ -8,17 +8,28 @@ export const loadBoard = (board, num, hidden) => {
       square.dataset.x = i;
       square.dataset.y = j;
       gameboardContainer.appendChild(square);
-      if (board[i][j].isShot === true) {
-        if (board[i][j].isShip === true) {
+      const curr = board[i][j];
+      if (curr.isShot === true) {
+        if (curr.isShip === true) {
           square.classList.add("board-hit");
         } else {
           square.classList.add("board-miss");
         }
-      } else {
-        if (board[i][j].isShip === true) {
-          if (hidden) {
+      }
+      if (curr.isShip === true) {
+        if (hidden) {
+        } else {
+          square.classList.add("board-boat");
+          if (curr.isFront) {
+            square.classList.add("front");
+          }
+          if (curr.isEnd) {
+            square.classList.add("end");
+          }
+          if (curr.isHorizontal) {
+            square.classList.add("horizontal");
           } else {
-            square.classList.add(board[i][j].Ship.name);
+            square.classList.add("vertical");
           }
         }
       }

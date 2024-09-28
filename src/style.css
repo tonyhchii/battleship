@@ -10,45 +10,131 @@
 .game-container {
   display: flex;
   justify-content: center;
+  width: 100%;
   gap: 5rem;
 }
 .gameboard-one,
 .gameboard-two {
+  margin: 2vmin;
   display: grid;
-  grid-template-columns: 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem;
+  grid-template-columns: repeat(10, 4.6vmin);
+  background-color: #45b3e7;
 }
 
 .board-square {
-  background-color: skyblue;
-  width: 3rem;
-  height: 3rem;
-  border: 1px;
+  width: 4.6vmin;
+  height: 4.6vmin;
+  background-color: #45b3e7;
+  border: 1px solid hsla(0, 0%, 100%, 0.2);
   border-style: solid;
+  position: relative;
 }
 
+.board-boat {
+  background-color: hsl(0, 0%, 80%);
+}
+
+.board-boat.front.vertical {
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+}
+
+.board-boat.end.vertical {
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
+.board-boat.end.horizontal {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
+.board-boat.front.horizontal {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+
+.option-container {
+  display: flex;
+  justify-content: center;
+}
+.ship {
+  background-color: hsl(0, 0%, 80%);
+  width: calc(4.6vmin * var(--width, 1));
+  height: calc(4.6vmin * var(--height, 1));
+  border-radius: 2.3vmin;
+  margin: 1vmin;
+}
 .Submarine {
-  background-color: gray;
+  --height: 3;
 }
 
 .Battleship {
-  background-color: black;
+  --height: 4;
 }
 .Carrier {
-  background-color: beige;
+  --height: 5;
 }
 .Cruiser {
-  background-color: cadetblue;
+  --height: 3;
 }
 .Destroyer {
-  background-color: burlywood;
+  --height: 2;
 }
 
-.board-miss {
+.board-miss,
+.board-hit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-miss::after,
+.board-hit::after {
+  content: "";
+  position: absolute;
+  border-radius: 100%;
+  width: 2vmin;
+  height: 2vmin;
+}
+
+.board-hit::after {
+  background-color: red;
+}
+
+.board-miss::after {
   background-color: white;
 }
 
-.board-hit {
-  background-color: red;
+.board-miss::before,
+.board-hit::before {
+  content: "";
+  position: absolute;
+  animation: hit 0.2s ease-out forwards;
+  border-width: 0.1vmin;
+  border-style: solid;
+  border-radius: 100%;
+  width: 2vmin;
+  height: 2vmin;
+}
+
+.board-hit::before {
+  border-color: red;
+}
+
+.board-miss:before {
+  border-color: white;
+}
+
+@keyframes hit {
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(4);
+  }
 }
 
 .btn-container {

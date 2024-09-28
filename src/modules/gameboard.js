@@ -14,18 +14,31 @@ class Gameboard {
           isShip: false,
           isShot: false,
           Ship: null,
+          isFront: false,
+          isEnd: false,
+          isHorizontal: false,
         });
       }
       this.board.push(row);
     }
   }
 
-  placeShip(ship, points) {
+  placeShip(ship, points, isHorizontal) {
     this.ships.push(ship);
-    points.forEach((point) => {
-      this.board[point[0]][point[1]].Ship = ship;
-      this.board[point[0]][point[1]].isShip = true;
-    });
+    for (let i = 0; i < points.length; i++) {
+      const curr = this.board[points[i][0]][points[i][1]];
+      if (isHorizontal) {
+        curr.isHorizontal = true;
+      }
+      if (i === 0) {
+        curr.isFront = true;
+      }
+      if (i === points.length - 1) {
+        curr.isEnd = true;
+      }
+      curr.Ship = ship;
+      curr.isShip = true;
+    }
   }
 
   isValid(points) {
@@ -59,9 +72,9 @@ class Gameboard {
     }
   }
 
-  generateShipPoints(ship, startPoint) {
+  generateShipPoints(ship, startPoint, isHorizontal) {
     const randomBool = Math.random() < 0.5;
-    const isHorizontal = randomBool;
+    isHorizontal = isHorizontal ? isHorizontal : randomBool;
     const randomStartX = Math.floor(Math.random() * 10);
     const randomStartY = Math.floor(Math.random() * 10);
     const startX = startPoint ? parseInt(startPoint[0]) : randomStartX;
@@ -74,15 +87,19 @@ class Gameboard {
         points.push([startX + i, startY]);
       }
     }
-    return points;
+    return [points, isHorizontal];
   }
 
-  addShipToGame(ship, player, startPoint) {
-    const points = this.generateShipPoints(ship, startPoint);
+  addShipToGame(ship, player, startPoint, isHorizontal) {
+    const [points, hor] = this.generateShipPoints(
+      ship,
+      startPoint,
+      isHorizontal
+    );
     if (this.isValid(points)) {
-      this.placeShip(ship, points);
-    } else if (player == "comp") {
-      this.addShipToGame(ship, "comp");
+      this.placeShip(ship, points, hor);
+    } else if (!player) {
+      this.addShipToGame(ship, false);
     }
   }
 }
