@@ -1,4 +1,4 @@
-import { loadBoard } from "./DOM/boardDOM";
+import { loadBoard, loadSquare } from "./DOM/boardDOM";
 import { Player } from "./modules/player";
 
 export const loadGame = () => {
@@ -9,15 +9,15 @@ export const loadGame = () => {
   loadBoard(player2.gameboard.board, "two", false);
   const dragControl = dragShipController(player1);
   dragControl.create();
-
-  startGameController(player1, player2);
+  startGameController(player1, player2).create();
 };
 
 const startGameController = (player1, player2) => {
-  const optionContainer = document.querySelector(".option-container");
-  const startGameBtn = document.getElementById("start");
-  startGameBtn.addEventListener("click", () => {
+  const startGame = () => {
+    const optionContainer = document.querySelector(".option-container");
+    const startGameBtn = document.getElementById("start");
     if (optionContainer.children.length === 0) {
+      destroy();
       optionContainer.classList.add("hide");
       startGameBtn.classList.add("hide");
       const player2Board = gameboardController("two", player2, player1);
@@ -25,7 +25,22 @@ const startGameController = (player1, player2) => {
     } else {
       console.log("Need to drag all ships");
     }
-  });
+  };
+
+  const create = () => {
+    const startGameBtn = document.getElementById("start");
+    startGameBtn.addEventListener("click", startGame);
+  };
+
+  const destroy = () => {
+    const startGameBtn = document.getElementById("start");
+    startGameBtn.removeEventListener("click", startGame);
+  };
+
+  return {
+    create,
+    destroy,
+  };
 };
 
 const computerAttack = (player) => {
@@ -52,7 +67,7 @@ const gameboardController = (boardNum, myPlayer, enemyPlayer) => {
     const yVal = e.target.dataset.y;
     if (xVal && yVal) {
       myPlayer.gameboard.receiveAttack([xVal, yVal]);
-      loadBoard(myPlayer.gameboard.board, boardNum, false);
+      loadSquare(myPlayer.gameboard.board, boardNum, false, [xVal, yVal]);
       computerAttack(enemyPlayer);
     }
     gameOverCheck(myPlayer);
