@@ -12,6 +12,16 @@ export const loadGame = () => {
   startGameController(player1, player2).create();
 };
 
+const singlePlayerGame = () => {
+  const player1 = new Player("human");
+  const player2 = new Player("comp");
+  player2.addAllShips(player2.ships);
+  loadBoard(player1.gameboard.board, "one", false);
+  loadBoard(player2.gameboard.board, "two", false);
+  const dragControl = dragShipController(player1);
+  dragControl.create();
+  startGameController(player1, player2).create();
+};
 const startGameController = (player1, player2) => {
   const startGame = () => {
     const optionContainer = document.querySelector(".option-container");
@@ -20,7 +30,7 @@ const startGameController = (player1, player2) => {
       destroy();
       optionContainer.classList.add("hide");
       startGameBtn.classList.add("hide");
-      const player2Board = gameboardController("two", player2, player1);
+      const player2Board = gameboardController("two", player2, player1.true);
       player2Board.create();
     } else {
       console.log("Need to drag all ships");
@@ -60,7 +70,7 @@ const gameOverCheck = (player) => {
   }
 };
 
-const gameboardController = (boardNum, myPlayer, enemyPlayer) => {
+const gameboardController = (boardNum, myPlayer, enemyPlayer, singlePlayer) => {
   const gameBoard = document.querySelector(`.gameboard-${boardNum}`);
   const controlGame = (e) => {
     const xVal = e.target.dataset.x;
@@ -68,7 +78,9 @@ const gameboardController = (boardNum, myPlayer, enemyPlayer) => {
     if (xVal && yVal) {
       myPlayer.gameboard.receiveAttack([xVal, yVal]);
       loadSquare(myPlayer.gameboard.board, boardNum, false, [xVal, yVal]);
-      computerAttack(enemyPlayer);
+      if (singlePlayer) {
+        computerAttack(enemyPlayer);
+      }
     }
     gameOverCheck(myPlayer);
   };
