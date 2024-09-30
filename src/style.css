@@ -13,8 +13,7 @@
   width: 100%;
   gap: 5rem;
 }
-.gameboard-one,
-.gameboard-two {
+.gameboard {
   margin: 2vmin;
   display: grid;
   grid-template-columns: repeat(10, 4.6vmin);

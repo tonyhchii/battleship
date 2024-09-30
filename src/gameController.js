@@ -2,35 +2,91 @@ import { loadBoard, loadSquare } from "./DOM/boardDOM";
 import { Player } from "./modules/player";
 
 export const loadGame = () => {
+  twoPlayerGame();
+};
+
+const switchPlayer = (myPlayer, enemyPlayer, myBoard, enemyBoard) => {
+  loadBoard(myPlayer.gameboard.board, myBoard, false);
+  loadBoard(enemyPlayer.gameboard.board, enemyBoard, true);
+};
+
+const twoPlayerGame = () => {
   const player1 = new Player("human");
   const player2 = new Player("comp");
-  player2.addAllShips(player2.ships);
-  loadBoard(player1.gameboard.board, "one", false);
-  loadBoard(player2.gameboard.board, "two", false);
-  const dragControl = dragShipController(player1);
-  dragControl.create();
-  startGameController(player1, player2).create();
+  loadBoard(player1.gameboard.board, "game1", false);
+  loadBoard(player2.gameboard.board, "game2", false);
+  loadShips(player1, player2);
+};
+
+const loadShips = (player1, player2) => {
+  const dragControlOne = dragShipController(player1, "game1");
+  dragControlOne.create();
+  const startGameBtn = document.getElementById("start");
+  startGameBtn.textContent = "Ready";
+  const readyUp = () => {
+    const gameboardContainer = document.getElementById("game1");
+    const optionContainer =
+      gameboardContainer.querySelector(".option-container");
+    if (optionContainer.children.length > 0) {
+      optionContainer.classList.toggle("hide");
+      startGameBtn.textContent = "Start Game";
+      startGameBtn.removeEventListener("click", readyUp);
+      switchPlayer(player2, player1, "game2", "game1");
+      const dragControlTwo = dragShipController(player2, "game2");
+      dragControlTwo.create();
+      startGameBtn.addEventListener("click", () => {
+        switchPlayer(player1, player2, "game1", "game2");
+        startGame();
+      });
+    }
+  };
+
+  const startGame = () => {
+    const gameboardContainer = document.getElementById("game2");
+    const optionContainer =
+      gameboardContainer.querySelector(".option-container");
+    const startGameBtn = document.getElementById("start");
+    if (optionContainer.children.length > 0) {
+      optionContainer.classList.add("hide");
+      startGameBtn.classList.add("hide");
+      const player2Board = gameboardController(
+        "game2",
+        player2,
+        player1,
+        false
+      );
+      player2Board.create();
+    } else {
+      console.log("Need to drag all ships");
+    }
+  };
+
+  startGameBtn.addEventListener("click", readyUp);
 };
 
 const singlePlayerGame = () => {
   const player1 = new Player("human");
   const player2 = new Player("comp");
+
   player2.addAllShips(player2.ships);
-  loadBoard(player1.gameboard.board, "one", false);
-  loadBoard(player2.gameboard.board, "two", false);
+  loadBoard(player1.gameboard.board, "game1", false);
+  loadBoard(player2.gameboard.board, "game2", false);
   const dragControl = dragShipController(player1);
   dragControl.create();
   startGameController(player1, player2).create();
 };
+
 const startGameController = (player1, player2) => {
   const startGame = () => {
-    const optionContainer = document.querySelector(".option-container");
+    const gameboardContainer = document.getElementById("game1");
+    const optionContainer =
+      gameboardContainer.querySelector(".option-container");
     const startGameBtn = document.getElementById("start");
     if (optionContainer.children.length === 0) {
       destroy();
       optionContainer.classList.add("hide");
       startGameBtn.classList.add("hide");
-      const player2Board = gameboardController("two", player2, player1.true);
+      const player2Board = gameboardController("game2", player2, player1, true);
       player2Board.create();
     } else {
       console.log("Need to drag all ships");
@@ -58,10 +114,8 @@ const computerAttack = (player) => {
   const yVal = Math.floor(Math.random() * 10);
   if (xVal && yVal) {
     player.gameboard.receiveAttack([xVal, yVal]);
-    loadBoard(player.gameboard.board, "one", false);
+    loadSquare(player.gameboard.board, "game1", false, [xVal, yVal]);
   }
-
-  gameOverCheck(player);
 };
 
 const gameOverCheck = (player) => {
@@ -71,7 +125,8 @@ const gameOverCheck = (player) => {
 };
 
 const gameboardController = (boardNum, myPlayer, enemyPlayer, singlePlayer) => {
-  const gameBoard = document.querySelector(`.gameboard-${boardNum}`);
+  const gameboardContainer = document.getElementById(boardNum);
+  const gameBoard = gameboardContainer.querySelector(`.gameboard`);
   const controlGame = (e) => {
     const xVal = e.target.dataset.x;
     const yVal = e.target.dataset.y;
@@ -80,6 +135,17 @@ const gameboardController = (boardNum, myPlayer, enemyPlayer, singlePlayer) => {
       loadSquare(myPlayer.gameboard.board, boardNum, false, [xVal, yVal]);
       if (singlePlayer) {
         computerAttack(enemyPlayer);
+      } else {
+        destroy();
+        const myBoard = boardNum === "game1" ? "game1" : "game2";
+        const enemyBoard = boardNum === "game1" ? "game2" : "game1";
+        switchPlayer(enemyPlayer, myPlayer, enemyBoard, myBoard);
+        gameboardController(
+          enemyBoard,
+          enemyPlayer,
+          myPlayer,
+          singlePlayer
+        ).create();
       }
     }
     gameOverCheck(myPlayer);
@@ -96,12 +162,13 @@ const gameboardController = (boardNum, myPlayer, enemyPlayer, singlePlayer) => {
   };
 };
 
-const dragShipController = (player) => {
-  const optionContainer = document.querySelector(".option-container");
+const dragShipController = (player, boardNum) => {
+  const gameboardContainer = document.getElementById(boardNum);
+  const gameboard = gameboardContainer.querySelector(".gameboard");
+  const optionContainer = gameboardContainer.querySelector(".option-container");
   const optionShips = Array.from(optionContainer.children);
   let draggedShip = null;
-  const gameboard = document.querySelector(".gameboard-one");
-
+  optionContainer.classList.toggle("hide");
   const addDraggedShip = (e) => {
     const xVal = e.target.dataset.x;
     const yVal = e.target.dataset.y;
@@ -113,7 +180,7 @@ const dragShipController = (player) => {
         [xVal, yVal],
         false
       );
-      loadBoard(player.gameboard.board, "one", false);
+      loadBoard(player.gameboard.board, boardNum, false);
       if (ships < player.gameboard.ships.length) {
         draggedShip.remove();
       }
